@@ -44,6 +44,8 @@ export default async function HomePage() {
             "Type-Safe Connections",
             "Workflow History",
             "Export/Import",
+            "Undo / Redo",
+            "Transloadit CDN",
           ].map((feature) => (
             <span
               key={feature}
@@ -76,8 +78,10 @@ export default async function HomePage() {
       </div>
 
       {/* Footer */}
-      <div className="absolute bottom-6 text-xs text-[#52525b]">
-        Built with Next.js, React Flow, and Groq
+      <div className="absolute bottom-6 flex items-center gap-3 text-xs text-[#52525b]">
+        <span>Built with Next.js, React Flow &amp; Groq</span>
+        <span className="w-1 h-1 rounded-full bg-[#3a3a3e]" />
+        <span className="text-purple-500/60">v1.0</span>
       </div>
     </div>
   );
