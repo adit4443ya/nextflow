@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String   @default("Untitled Workflow")
+  description String?
+
+  // React Flow state serialized as JSON
+  nodes    Json @default("[]")
+  edges    Json @default("[]")
+  viewport Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  runs WorkflowRun[]
+
+  @@index([userId])
+}
+
+model WorkflowRun {
+  id         String   @id @default(cuid())
+  workflowId String
+  workflow   Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  userId     String
+
+  status    RunStatus @default(RUNNING)
+  scope     RunScope
+  duration  Int? // milliseconds
+
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  nodeRuns NodeRun[]
+
+  @@index([workflowId])
+  @@index([userId])
+}
+
+model NodeRun {
+  id            String      @id @default(cuid())
+  workflowRunId String
+  workflowRun   WorkflowRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+
+  nodeId   String // React Flow node ID
+  nodeType String // text, uploadImage, uploadVideo, llm, cropImage, extractFrame
+  nodeName String
+
+  status   RunStatus @default(RUNNING)
+  inputs   Json?
+  output   Json?
+  error    String?
+  duration Int? // milliseconds
+
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+
+  @@index([workflowRunId])
+}
+
+enum RunStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
+
+enum RunScope {
+  FULL
+  PARTIAL
+  SINGLE
+}

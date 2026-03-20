@@ -1,0 +1,50 @@
+{
+  "name": "nextflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "dev:all": "npx concurrently --kill-others --names \"next,trigger\" --prefix-colors \"yellow,blue\" \"next dev\" \"npx trigger.dev@latest dev\"",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "trigger:dev": "npx trigger.dev@latest dev",
+    "trigger:deploy": "npx trigger.dev@latest deploy",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
+    "@clerk/themes": "^2.2.0",
+    "@google/generative-ai": "^0.24.0",
+    "@prisma/client": "^6.3.0",
+    "@trigger.dev/build": "4.4.3",
+    "@trigger.dev/sdk": "4.4.3",
+    "@vercel/blob": "^2.3.1",
+    "@xyflow/react": "^12.6.0",
+    "groq-sdk": "^1.1.1",
+    "lucide-react": "^0.474.0",
+    "nanoid": "^5.1.3",
+    "next": "^15.5.13",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "^0.33.0",
+    "zod": "^3.24.0",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.1.0",
+    "eslint": "^9",
+    "eslint-config-next": "^15.5.13",
+    "postcss": "^8",
+    "prisma": "^6.3.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

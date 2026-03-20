@@ -1,0 +1,168 @@
+{
+  "nodes": [
+    {
+      "id": "node_img1",
+      "type": "uploadImageNode",
+      "position": { "x": 50, "y": 50 },
+      "data": { "label": "Upload Image" }
+    },
+    {
+      "id": "node_crop1",
+      "type": "cropImageNode",
+      "position": { "x": 350, "y": 50 },
+      "data": {
+        "label": "Crop Image",
+        "xPercent": 10,
+        "yPercent": 10,
+        "widthPercent": 80,
+        "heightPercent": 80
+      }
+    },
+    {
+      "id": "node_text1",
+      "type": "textNode",
+      "position": { "x": 50, "y": 280 },
+      "data": {
+        "label": "System Prompt",
+        "text": "You are a professional marketing copywriter. Generate a compelling one-paragraph product description.",
+        "output": "You are a professional marketing copywriter. Generate a compelling one-paragraph product description."
+      }
+    },
+    {
+      "id": "node_text2",
+      "type": "textNode",
+      "position": { "x": 50, "y": 450 },
+      "data": {
+        "label": "Product Details",
+        "text": "Product: Wireless Bluetooth Headphones. Features: Noise cancellation, 30-hour battery, foldable design.",
+        "output": "Product: Wireless Bluetooth Headphones. Features: Noise cancellation, 30-hour battery, foldable design."
+      }
+    },
+    {
+      "id": "node_llm1",
+      "type": "llmNode",
+      "position": { "x": 700, "y": 150 },
+      "data": {
+        "label": "LLM - Product Description",
+        "model": "gemini-2.0-flash"
+      }
+    },
+    {
+      "id": "node_vid1",
+      "type": "uploadVideoNode",
+      "position": { "x": 50, "y": 650 },
+      "data": { "label": "Upload Video" }
+    },
+    {
+      "id": "node_extract1",
+      "type": "extractFrameNode",
+      "position": { "x": 350, "y": 650 },
+      "data": {
+        "label": "Extract Frame",
+        "timestamp": "50%"
+      }
+    },
+    {
+      "id": "node_text3",
+      "type": "textNode",
+      "position": { "x": 700, "y": 500 },
+      "data": {
+        "label": "Social Media Prompt",
+        "text": "You are a social media manager. Create a tweet-length marketing post based on the product image and video frame.",
+        "output": "You are a social media manager. Create a tweet-length marketing post based on the product image and video frame."
+      }
+    },
+    {
+      "id": "node_llm2",
+      "type": "llmNode",
+      "position": { "x": 1100, "y": 350 },
+      "data": {
+        "label": "LLM - Final Marketing Post",
+        "model": "gemini-2.0-flash"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge_img_crop",
+      "source": "node_img1",
+      "target": "node_crop1",
+      "sourceHandle": "output",
+      "targetHandle": "image_url",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_crop_llm1",
+      "source": "node_crop1",
+      "target": "node_llm1",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_text1_llm1",
+      "source": "node_text1",
+      "target": "node_llm1",
+      "sourceHandle": "output",
+      "targetHandle": "system_prompt",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_text2_llm1",
+      "source": "node_text2",
+      "target": "node_llm1",
+      "sourceHandle": "output",
+      "targetHandle": "user_message",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_vid_extract",
+      "source": "node_vid1",
+      "target": "node_extract1",
+      "sourceHandle": "output",
+      "targetHandle": "video_url",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_text3_llm2",
+      "source": "node_text3",
+      "target": "node_llm2",
+      "sourceHandle": "output",
+      "targetHandle": "system_prompt",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_llm1_llm2",
+      "source": "node_llm1",
+      "target": "node_llm2",
+      "sourceHandle": "output",
+      "targetHandle": "user_message",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_crop_llm2",
+      "source": "node_crop1",
+      "target": "node_llm2",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "type": "animatedEdge",
+      "animated": true
+    },
+    {
+      "id": "edge_extract_llm2",
+      "source": "node_extract1",
+      "target": "node_llm2",
+      "sourceHandle": "output",
+      "targetHandle": "images",
+      "type": "animatedEdge",
+      "animated": true
+    }
+  ]
+}

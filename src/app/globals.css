@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   NextFlow — Global Styles
+   Dark theme matching Krea.ai aesthetic
+   ============================================================ */
+
+/* Base resets */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ============================================================
+   Scrollbar styling — thin, dark, minimal
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2e;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3e;
+}
+
+/* ============================================================
+   Pulsating glow animation for running nodes
+   ============================================================ */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(139, 92, 246, 0.2),
+      0 0 10px rgba(139, 92, 246, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5),
+      0 0 30px rgba(139, 92, 246, 0.3);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Success flash */
+@keyframes success-flash {
+  0% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+    border-color: #22c55e;
+  }
+  100% {
+    box-shadow: none;
+    border-color: #2a2a2e;
+  }
+}
+
+.animate-success-flash {
+  animation: success-flash 1s ease-out forwards;
+}
+
+/* ============================================================
+   React Flow overrides — match dark theme
+   ============================================================ */
+.react-flow__node {
+  /* Remove default React Flow node styling */
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.react-flow__node.selected {
+  /* Selected node — purple outline */
+  border: none !important;
+}
+
+.react-flow__node.selected > div {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.5);
+}
+
+.react-flow__handle {
+  z-index: 10;
+}
+
+/* Edge hover effect */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: 3;
+}
+
+/* Connection line while dragging */
+.react-flow__connection-path {
+  stroke: #8b5cf6 !important;
+  stroke-width: 2;
+  stroke-dasharray: 5;
+  animation: dash 0.5s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+/* Attribution hidden (using proOptions) */
+.react-flow__attribution {
+  display: none !important;
+}
+
+/* Controls panel */
+.react-flow__controls {
+  bottom: 16px !important;
+  left: 16px !important;
+}
+
+/* MiniMap */
+.react-flow__minimap {
+  bottom: 16px !important;
+  right: 16px !important;
+}
+
+/* ============================================================
+   Selection box
+   ============================================================ */
+.react-flow__selection {
+  background: rgba(139, 92, 246, 0.08) !important;
+  border: 1px solid rgba(139, 92, 246, 0.4) !important;
+}
+
+/* ============================================================
+   Toast slide-up animation
+   ============================================================ */
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* ============================================================
+   Clerk UI overrides for consistency
+   ============================================================ */
+.cl-rootBox {
+  width: 100%;
+}
+
+.cl-card {
+  background: #141416 !important;
+  border: 1px solid #2a2a2e !important;
+}
