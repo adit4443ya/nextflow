@@ -24,10 +24,9 @@ export function useFileUpload({ fileType, onSuccess, onError }: UseFileUploadOpt
       setIsUploading(true);
       setProgress(0);
 
-      // Slow steady progress — large files can take minutes, don't rush to 90% in 2s
       const progressInterval = setInterval(() => {
-        setProgress((prev) => Math.min(prev + 1, 85));
-      }, 800);
+        setProgress((prev) => Math.min(prev + 2, 85));
+      }, 400);
 
       try {
         let url: string;
@@ -56,15 +55,22 @@ export function useFileUpload({ fileType, onSuccess, onError }: UseFileUploadOpt
 
           let assembly = await uploadRes.json();
 
-          // Poll until assembly completes (max 240 attempts × 2s = ~8 minutes for large files)
+          // Poll with short intervals early on, backing off for larger files
+          // 500ms × 10 → 1000ms × 10 → 2000ms until done (max ~8 min total)
           let attempts = 0;
+          const pollIntervals = [
+            ...Array(10).fill(500),   // first 5s: check every 500ms
+            ...Array(10).fill(1000),  // next 10s: check every 1s
+          ];
+
           while (
             assembly.ok !== "ASSEMBLY_COMPLETED" &&
             assembly.ok !== "REQUEST_ABORTED" &&
             !assembly.error &&
-            attempts < 240
+            attempts < 300
           ) {
-            await new Promise((r) => setTimeout(r, 2000));
+            const delay = pollIntervals[attempts] ?? 2000;
+            await new Promise((r) => setTimeout(r, delay));
             const pollRes = await fetch(assembly.assembly_ssl_url);
             assembly = await pollRes.json();
             attempts++;
@@ -74,8 +80,6 @@ export function useFileUpload({ fileType, onSuccess, onError }: UseFileUploadOpt
             throw new Error(assembly.error || "Upload timed out — file may be too large or connection too slow");
           }
 
-          // results[":original"] is populated when the step is explicitly defined;
-          // fall back to assembly.uploads which always contains all uploaded files
           const fileResult =
             assembly.results?.[":original"]?.[0] ??
             assembly.uploads?.[0];
