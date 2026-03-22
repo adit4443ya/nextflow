@@ -6,7 +6,7 @@ export default function SignInPage() {
       <SignIn
         appearance={{
           elements: {
-            rootBox: "mx-auto",
+            rootBox: "mx-auto w-full flex justify-center",
             card: "bg-[#141416] border border-[#2a2a2e]",
           },
         }}
