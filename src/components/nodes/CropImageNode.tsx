@@ -2,7 +2,7 @@
 
 import React, { useCallback } from "react";
 import { type NodeProps } from "@xyflow/react";
-import { Crop, Loader2 } from "lucide-react";
+import { Crop, Loader2, X } from "lucide-react";
 import NodeWrapper from "./NodeWrapper";
 import { NODE_TYPES, type CropImageNodeData } from "@/types/nodes";
 import { useWorkflowStore } from "@/store/workflow-store";
@@ -122,13 +122,20 @@ export default function CropImageNode({ id, data }: NodeProps) {
       {/* Output preview */}
       {nodeData.output && !nodeData.isRunning && (
         <div className="mt-1 border-t border-[#2a2a2e] pt-2">
-          <label className="text-[10px] text-[#71717a] uppercase tracking-wider">
-            Cropped
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Cropped</label>
+            <button
+              onClick={() => updateNodeData(id, { output: undefined, error: undefined })}
+              className="nodrag p-0.5 rounded hover:bg-[#2a2a2e] text-[#52525b] hover:text-[#a1a1aa] transition-colors"
+              title="Clear output"
+            >
+              <X size={10} />
+            </button>
+          </div>
           <img
             src={nodeData.output}
             alt="Cropped"
-            className="w-full h-24 object-cover rounded-lg border border-[#2a2a2e] mt-1"
+            className="w-full h-24 object-cover rounded-lg border border-[#2a2a2e]"
           />
         </div>
       )}

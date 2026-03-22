@@ -11,6 +11,8 @@ import {
   Sparkles,
   ChevronDown,
   Square,
+  Eraser,
+  Trash2,
 } from "lucide-react";
 import { useWorkflowStore } from "@/store/workflow-store";
 import { useHistoryStore } from "@/store/history-store";
@@ -57,6 +59,8 @@ export default function Toolbar() {
     nodes,
     edges,
     updateNodeData,
+    clearAllOutputs,
+    clearCanvas,
   } = useWorkflowStore();
 
   const fetchRuns = useHistoryStore((s) => s.fetchRuns);
@@ -340,6 +344,34 @@ export default function Toolbar() {
             </>
           )}
         </div>
+
+        <button
+          onClick={clearAllOutputs}
+          disabled={nodes.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
+            hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors
+            disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Clear all node outputs"
+        >
+          <Eraser size={14} />
+          Clear Outputs
+        </button>
+
+        <button
+          onClick={() => {
+            if (nodes.length > 0 && confirm("Remove all nodes from canvas?")) {
+              clearCanvas();
+            }
+          }}
+          disabled={nodes.length === 0}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
+            hover:bg-red-500/10 text-[#71717a] hover:text-red-400 transition-colors
+            disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Remove all nodes"
+        >
+          <Trash2 size={14} />
+          Clear Canvas
+        </button>
 
         <div className="w-px h-5 bg-[#2a2a2e] mx-1" />
 

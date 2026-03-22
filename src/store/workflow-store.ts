@@ -57,6 +57,8 @@ interface WorkflowState {
   updateNodeData: (nodeId: string, data: Partial<WorkflowNodeData>) => void;
   deleteNode: (nodeId: string) => void;
   deleteSelectedNodes: () => void;
+  clearAllOutputs: () => void;
+  clearCanvas: () => void;
 
   setNodes: (nodes: WorkflowNode[]) => void;
   setEdges: (edges: Edge[]) => void;
@@ -182,6 +184,19 @@ export const useWorkflowStore = create<WorkflowState>((set, get) => ({
       ),
       selectedNodeIds: new Set(),
     });
+  },
+
+  clearAllOutputs: () =>
+    set({
+      nodes: get().nodes.map((n) => ({
+        ...n,
+        data: { ...n.data, output: undefined, error: undefined, isRunning: false },
+      })),
+    }),
+
+  clearCanvas: () => {
+    get().pushHistory();
+    set({ nodes: [], edges: [] });
   },
 
   setNodes: (nodes) => set({ nodes }),

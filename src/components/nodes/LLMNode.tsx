@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from "react";
 import { type NodeProps } from "@xyflow/react";
-import { Bot, Loader2, ChevronDown, ChevronUp, Settings2 } from "lucide-react";
+import { Bot, Loader2, ChevronDown, ChevronUp, Settings2, X } from "lucide-react";
 import NodeWrapper from "./NodeWrapper";
 import { NODE_TYPES, type LLMNodeData } from "@/types/nodes";
 import { useWorkflowStore } from "@/store/workflow-store";
@@ -194,7 +194,16 @@ export default function LLMNode({ id, data }: NodeProps) {
       {/* Output display */}
       {nodeData.output && !nodeData.isRunning && (
         <div className="mt-1 border-t border-[#2a2a2e] pt-2">
-          <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Output</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Output</label>
+            <button
+              onClick={() => updateNodeData(id, { output: undefined, error: undefined })}
+              className="nodrag p-0.5 rounded hover:bg-[#2a2a2e] text-[#52525b] hover:text-[#a1a1aa] transition-colors"
+              title="Clear output"
+            >
+              <X size={10} />
+            </button>
+          </div>
           <div className="bg-[#0f0f11] rounded-lg px-3 py-2 text-xs text-[#a1a1aa] max-h-40 overflow-y-auto nowheel">
             {nodeData.output}
           </div>

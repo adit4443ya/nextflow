@@ -16,6 +16,12 @@ function WorkflowEditor() {
   const { workflowId } = useAutoSave();
   const setWorkflow = useWorkflowStore((s) => s.setWorkflow);
   const fetchRuns = useHistoryStore((s) => s.fetchRuns);
+  const clearHistory = useHistoryStore((s) => s.clear);
+
+  // Clear history when this page unmounts (i.e. on logout/redirect)
+  useEffect(() => {
+    return () => { clearHistory(); };
+  }, [clearHistory]);
 
   // Load most recent workflow on mount
   useEffect(() => {
