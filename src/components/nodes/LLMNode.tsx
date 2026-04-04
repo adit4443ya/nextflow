@@ -62,12 +62,12 @@ export default function LLMNode({ id, data }: NodeProps) {
     >
       {/* Model selector */}
       <div>
-        <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Model</label>
+        <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider">Model</label>
         <select
           value={nodeData.model || "groq:meta-llama/llama-4-scout-17b-16e-instruct"}
           onChange={onModelChange}
-          className="nodrag w-full bg-[#0f0f11] border border-[#2a2a2e] rounded-lg px-3 py-1.5
-            text-xs text-[#e4e4e7] focus:outline-none focus:border-purple-500/50
+          className="nodrag w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded-lg px-3 py-1.5
+            text-xs text-gray-900 dark:text-[#e4e4e7] focus:outline-none focus:border-purple-500/50
             transition-colors cursor-pointer"
         >
           {GROQ_MODELS.map((m) => (
@@ -80,7 +80,7 @@ export default function LLMNode({ id, data }: NodeProps) {
 
       {/* System prompt */}
       <div>
-        <label className="text-[10px] text-[#71717a] uppercase tracking-wider flex items-center gap-1">
+        <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider flex items-center gap-1">
           System Prompt
           {connectedInputs.has("system_prompt") && (
             <span className="text-purple-400 text-[9px]">● connected</span>
@@ -93,8 +93,8 @@ export default function LLMNode({ id, data }: NodeProps) {
           disabled={connectedInputs.has("system_prompt")}
           placeholder={connectedInputs.has("system_prompt") ? "Connected from upstream node" : "Optional system instructions..."}
           rows={2}
-          className="nodrag nowheel w-full bg-[#0f0f11] border border-[#2a2a2e] rounded-lg px-3 py-1.5
-            text-xs text-[#e4e4e7] placeholder-[#52525b] resize-none focus:outline-none
+          className="nodrag nowheel w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded-lg px-3 py-1.5
+            text-xs text-gray-900 placeholder-gray-400 dark:text-[#e4e4e7] dark:placeholder-[#52525b] resize-none focus:outline-none
             focus:border-purple-500/50 transition-colors
             disabled:opacity-40 disabled:cursor-not-allowed"
         />
@@ -102,7 +102,7 @@ export default function LLMNode({ id, data }: NodeProps) {
 
       {/* User message */}
       <div>
-        <label className="text-[10px] text-[#71717a] uppercase tracking-wider flex items-center gap-1">
+        <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider flex items-center gap-1">
           User Message <span className="text-red-400">*</span>
           {connectedInputs.has("user_message") && (
             <span className="text-purple-400 text-[9px]">● connected</span>
@@ -115,8 +115,8 @@ export default function LLMNode({ id, data }: NodeProps) {
           disabled={connectedInputs.has("user_message")}
           placeholder={connectedInputs.has("user_message") ? "Connected from upstream node" : "Enter message for the LLM..."}
           rows={2}
-          className="nodrag nowheel w-full bg-[#0f0f11] border border-[#2a2a2e] rounded-lg px-3 py-1.5
-            text-xs text-[#e4e4e7] placeholder-[#52525b] resize-none focus:outline-none
+          className="nodrag nowheel w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded-lg px-3 py-1.5
+            text-xs text-gray-900 placeholder-gray-400 dark:text-[#e4e4e7] dark:placeholder-[#52525b] resize-none focus:outline-none
             focus:border-purple-500/50 transition-colors
             disabled:opacity-40 disabled:cursor-not-allowed"
         />
@@ -132,7 +132,7 @@ export default function LLMNode({ id, data }: NodeProps) {
       {/* Advanced settings toggle */}
       <button
         onClick={() => setShowAdvanced((v) => !v)}
-        className="nodrag flex items-center gap-1 text-[10px] text-[#52525b] hover:text-[#71717a] transition-colors"
+        className="nodrag flex items-center gap-1 text-[10px] text-gray-400 hover:text-gray-600 dark:text-[#52525b] dark:hover:text-[#71717a] transition-colors"
       >
         <Settings2 size={10} />
         Advanced
@@ -140,10 +140,10 @@ export default function LLMNode({ id, data }: NodeProps) {
       </button>
 
       {showAdvanced && (
-        <div className="space-y-2 border-t border-[#2a2a2e] pt-2">
+        <div className="space-y-2 border-t border-gray-200 dark:border-[#2a2a2e] pt-2">
           {/* Temperature */}
           <div>
-            <label className="text-[10px] text-[#71717a] uppercase tracking-wider flex items-center justify-between">
+            <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider flex items-center justify-between">
               Temperature
               <span className="text-purple-400 font-mono">{temperature.toFixed(1)}</span>
             </label>
@@ -156,7 +156,7 @@ export default function LLMNode({ id, data }: NodeProps) {
               onChange={(e) => updateNodeData(id, { temperature: parseFloat(e.target.value) })}
               className="nodrag w-full h-1 accent-purple-500 cursor-pointer"
             />
-            <div className="flex justify-between text-[9px] text-[#52525b] mt-0.5">
+            <div className="flex justify-between text-[9px] text-gray-400 dark:text-[#52525b] mt-0.5">
               <span>0 Precise</span>
               <span>1 Balanced</span>
               <span>2 Creative</span>
@@ -165,7 +165,7 @@ export default function LLMNode({ id, data }: NodeProps) {
 
           {/* Max tokens */}
           <div>
-            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">
+            <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider">
               Max Tokens
             </label>
             <input
@@ -176,8 +176,8 @@ export default function LLMNode({ id, data }: NodeProps) {
               value={maxTokens}
               onChange={(e) => updateNodeData(id, { maxTokens: parseInt(e.target.value) || 1024 })}
               onKeyDown={(e) => e.stopPropagation()}
-              className="nodrag w-full bg-[#0f0f11] border border-[#2a2a2e] rounded px-2 py-1
-                text-xs text-[#e4e4e7] focus:outline-none focus:border-purple-500/50 transition-colors"
+              className="nodrag w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded px-2 py-1
+                text-xs text-gray-900 dark:text-[#e4e4e7] focus:outline-none focus:border-purple-500/50 transition-colors"
             />
           </div>
         </div>
@@ -188,23 +188,23 @@ export default function LLMNode({ id, data }: NodeProps) {
         <div className="flex items-center gap-2 text-xs text-purple-400">
           <Loader2 size={12} className="animate-spin" />
           Running...
-        </div>
+         </div>
       )}
 
       {/* Output display */}
       {nodeData.output && !nodeData.isRunning && (
-        <div className="mt-1 border-t border-[#2a2a2e] pt-2">
+        <div className="mt-1 border-t border-gray-200 dark:border-[#2a2a2e] pt-2">
           <div className="flex items-center justify-between mb-1">
-            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Output</label>
+            <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider">Output</label>
             <button
               onClick={() => updateNodeData(id, { output: undefined, error: undefined })}
-              className="nodrag p-0.5 rounded hover:bg-[#2a2a2e] text-[#52525b] hover:text-[#a1a1aa] transition-colors"
+              className="nodrag p-0.5 rounded text-gray-400 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-[#2a2a2e] dark:text-[#52525b] dark:hover:text-[#a1a1aa] transition-colors"
               title="Clear output"
             >
               <X size={10} />
             </button>
           </div>
-          <div className="bg-[#0f0f11] rounded-lg px-3 py-2 text-xs text-[#a1a1aa] max-h-40 overflow-y-auto nowheel">
+          <div className="bg-gray-50 dark:bg-[#0f0f11] border border-gray-200 dark:border-[#2a2a2e] rounded-lg px-3 py-2 text-xs text-gray-700 dark:text-[#a1a1aa] max-h-40 overflow-y-auto nowheel">
             {nodeData.output}
           </div>
         </div>

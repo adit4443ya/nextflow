@@ -53,11 +53,11 @@ function WorkflowEditor() {
   }, [workflowId, fetchRuns]);
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#0a0a0b]">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-white dark:bg-[#0a0a0b] transition-colors">
       {/* Top toolbar */}
       <div className="flex items-center">
         <Toolbar />
-        <div className="h-12 bg-[#141416] border-b border-[#2a2a2e] flex items-center px-3">
+        <div className="h-12 bg-white/90 backdrop-blur-2xl border-b border-l border-indigo-100/50 dark:bg-[#141416]/90 dark:border-[#2a2a2e] dark:border-l-[#2a2a2e] flex items-center px-4 z-20 relative shadow-[0_4px_24px_rgba(79,70,229,0.05)] dark:shadow-none transition-all">
           <UserButton
             appearance={{
               elements: {

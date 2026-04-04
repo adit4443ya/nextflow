@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,15 +20,19 @@ export default function RootLayout({
         baseTheme: dark,
         variables: {
           colorPrimary: "#8b5cf6",
-          colorBackground: "#141416",
-          colorInputBackground: "#0f0f11",
-          colorInputText: "#e4e4e7",
         },
       }}
     >
-      <html lang="en" className="dark">
-        <body className="bg-[#0a0a0b] text-[#e4e4e7] antialiased">
-          {children}
+      <html lang="en" suppressHydrationWarning>
+        <body className="bg-gray-50 dark:bg-[#0a0a0b] text-gray-900 dark:text-[#e4e4e7] antialiased">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

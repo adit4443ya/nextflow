@@ -279,7 +279,7 @@ export type RunScope = "FULL" | "PARTIAL" | "SINGLE";
 
 export interface ExecutionResult {
   runId: string;
-  status: "SUCCESS" | "FAILED";
+  status: "RUNNING" | "SUCCESS" | "FAILED";
   outputs: Record<string, any>;
   errors: Record<string, string>;
 }
@@ -342,64 +342,79 @@ export async function executeWorkflow(
 
   console.log(`[Execution] Starting workflow ${workflowId}, ${nodes.length} nodes, trigger=${useTrigger}`);
 
-  for (const phase of plan.phases) {
-    await Promise.allSettled(
-      phase.nodeIds.map(async (nodeId) => {
-        const node = plan.nodeMap.get(nodeId)!;
-        const nodeData = node.data as any;
-        const startTime = Date.now();
+  // Push the heavy lifting to the background
+  (async () => {
+    try {
+      for (const phase of plan.phases) {
+        await Promise.allSettled(
+          phase.nodeIds.map(async (nodeId) => {
+            const node = plan.nodeMap.get(nodeId)!;
+            const nodeData = node.data as any;
+            const startTime = Date.now();
 
-        const nodeRun = await prisma.nodeRun.create({
-          data: {
-            workflowRunId: run.id,
-            nodeId,
-            nodeType: node.type || "unknown",
-            nodeName: nodeData.label || node.type || "Unknown",
-            status: "RUNNING",
-          },
-        });
+            const nodeRun = await prisma.nodeRun.create({
+              data: {
+                workflowRunId: run.id,
+                nodeId,
+                nodeType: node.type || "unknown",
+                nodeName: nodeData.label || node.type || "Unknown",
+                status: "RUNNING",
+              },
+            });
 
-        try {
-          const inputs = collectInputs(nodeId, edges, outputs);
-          const output = await executeSingleNode(node, inputs, apiKeys);
-          outputs.set(nodeId, output);
-          nodeResults[nodeId] = output;
+            try {
+              const inputs = collectInputs(nodeId, edges, outputs);
+              const output = await executeSingleNode(node, inputs, apiKeys);
+              outputs.set(nodeId, output);
+              nodeResults[nodeId] = output;
 
-          await prisma.nodeRun.update({
-            where: { id: nodeRun.id },
-            data: {
-              status: "SUCCESS",
-              output: output != null ? JSON.stringify(output).slice(0, 5000) : undefined,
-              inputs: JSON.stringify(inputs).slice(0, 5000),
-              duration: Date.now() - startTime,
-              completedAt: new Date(),
-            },
-          });
-        } catch (error: any) {
-          anyFailed = true;
-          nodeErrors[nodeId] = error.message || "Unknown error";
-          await prisma.nodeRun.update({
-            where: { id: nodeRun.id },
-            data: {
-              status: "FAILED",
-              error: error.message || "Unknown error",
-              duration: Date.now() - startTime,
-              completedAt: new Date(),
-            },
-          });
+              await prisma.nodeRun.update({
+                where: { id: nodeRun.id },
+                data: {
+                  status: "SUCCESS",
+                  output: output != null ? JSON.stringify(output).slice(0, 5000) : undefined,
+                  inputs: JSON.stringify(inputs).slice(0, 5000),
+                  duration: Date.now() - startTime,
+                  completedAt: new Date(),
+                },
+              });
+            } catch (error: any) {
+              anyFailed = true;
+              nodeErrors[nodeId] = error.message || "Unknown error";
+              await prisma.nodeRun.update({
+                where: { id: nodeRun.id },
+                data: {
+                  status: "FAILED",
+                  error: error.message || "Unknown error",
+                  duration: Date.now() - startTime,
+                  completedAt: new Date(),
+                },
+              });
+            }
+          })
+        );
+      }
+
+      await prisma.workflowRun.update({
+        where: { id: run.id },
+        data: {
+          status: anyFailed ? "FAILED" : "SUCCESS",
+          duration: Date.now() - run.startedAt.getTime(),
+          completedAt: new Date(),
+        },
+      });
+    } catch (err) {
+      console.error("[Execution Engine Background Error]", err);
+      // Failsafe workflow run failure
+      await prisma.workflowRun.update({
+        where: { id: run.id },
+        data: { 
+          status: "FAILED",
+          completedAt: new Date(),
         }
-      })
-    );
-  }
+      }).catch(() => {});
+    }
+  })();
 
-  await prisma.workflowRun.update({
-    where: { id: run.id },
-    data: {
-      status: anyFailed ? "FAILED" : "SUCCESS",
-      duration: Date.now() - run.startedAt.getTime(),
-      completedAt: new Date(),
-    },
-  });
-
-  return { runId: run.id, status: anyFailed ? "FAILED" : "SUCCESS", outputs: nodeResults, errors: nodeErrors };
+  return { runId: run.id, status: "RUNNING", outputs: {}, errors: {} };
 }

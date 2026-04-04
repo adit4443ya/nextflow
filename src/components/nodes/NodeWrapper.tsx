@@ -38,7 +38,7 @@ function HandleDot({
       type={position === Position.Left ? "target" : "source"}
       position={position}
       id={handle.id}
-      className="!w-3 !h-3 !border-2 !border-[#1a1a1e] transition-all hover:!scale-125"
+      className="!w-3 !h-3 !border-2 !border-white dark:!border-[#1a1a1e] transition-all hover:!scale-125 shadow-sm"
       style={{
         backgroundColor: color,
       }}
@@ -83,16 +83,17 @@ export default function NodeWrapper({
   return (
     <div
       className={`
-        relative min-w-[240px] max-w-[320px] rounded-xl border bg-[#1a1a1e] text-[#e4e4e7]
-        shadow-lg transition-all duration-200 group
+        relative min-w-[240px] max-w-[320px] rounded-xl border bg-white/95 dark:bg-[#1a1a1e] text-indigo-950 dark:text-[#e4e4e7]
+        backdrop-blur-md shadow-[0_12px_40px_-12px_rgba(79,70,229,0.15)] ring-1 ring-indigo-200/50 dark:shadow-none dark:ring-0
+        transition-all duration-200 group
         ${isRunning ? "animate-pulse-glow border-purple-500" : ""}
-        ${error ? "border-red-500/70" : "border-[#2a2a2e] hover:border-[#3a3a3e]"}
+        ${error ? "border-red-500/70 ring-red-500" : "border-transparent hover:ring-indigo-300 dark:border-[#2a2a2e] dark:hover:border-[#3a3a3e]"}
       `}
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between px-3 py-2 rounded-t-xl border-b border-[#2a2a2e]"
-        style={{ borderTopColor: color, borderTopWidth: "2px" }}
+        className="flex items-center justify-between px-3 py-2 rounded-t-xl border-b border-indigo-50 dark:border-[#2a2a2e] bg-gradient-to-r from-transparent to-indigo-50/30 dark:to-transparent"
+        style={{ borderTopColor: color, borderTopWidth: "3px" }}
       >
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span style={{ color }}>{icon}</span>
@@ -108,13 +109,13 @@ export default function NodeWrapper({
                 if (e.key === "Escape") { setLabelDraft(label); setEditingLabel(false); }
               }}
               className="nodrag flex-1 min-w-0 bg-transparent border-b border-purple-500/50 text-xs
-                font-semibold uppercase tracking-wider text-[#e4e4e7] outline-none"
+                font-semibold uppercase tracking-wider text-indigo-950 dark:text-[#e4e4e7] outline-none"
               autoFocus
             />
           ) : (
             <span
-              className="text-xs font-semibold uppercase tracking-wider text-[#a1a1aa]
-                cursor-text hover:text-[#e4e4e7] transition-colors truncate"
+              className="text-xs font-semibold uppercase tracking-wider text-indigo-900/60 dark:text-[#a1a1aa]
+                cursor-text hover:text-indigo-900 dark:hover:text-[#e4e4e7] transition-colors truncate"
               onDoubleClick={() => { setLabelDraft(label); setEditingLabel(true); }}
               title="Double-click to rename"
             >
@@ -124,7 +125,7 @@ export default function NodeWrapper({
         </div>
         <button
           onClick={onDelete}
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-[#2a2a2e] text-[#71717a] hover:text-red-400 shrink-0"
+          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-50 text-indigo-300 hover:text-red-500 dark:hover:bg-[#2a2a2e] dark:text-[#71717a] dark:hover:text-red-400 shrink-0"
         >
           <Trash2 size={14} />
         </button>

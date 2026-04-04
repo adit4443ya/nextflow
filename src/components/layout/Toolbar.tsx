@@ -14,6 +14,7 @@ import {
   Eraser,
   Trash2,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useWorkflowStore } from "@/store/workflow-store";
 import { useHistoryStore } from "@/store/history-store";
 import {
@@ -23,6 +24,7 @@ import {
 } from "@/lib/sample-workflow";
 import { validateWorkflow } from "@/lib/dag-validation";
 import { showToast } from "@/components/ui/Toast";
+import { useRealtimeRun } from "@/lib/hooks/useRealtimeRun";
 
 const SAMPLE_WORKFLOWS = [
   {
@@ -68,6 +70,16 @@ export default function Toolbar() {
   const abortRef = useRef<AbortController | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showSampleMenu, setShowSampleMenu] = useState(false);
+  const [activeRunId, setActiveRunId] = useState<string | null>(null);
+
+  useRealtimeRun(activeRunId, {
+    onFinish: () => {
+      setIsRunning(false);
+      setActiveRunId(null);
+      abortRef.current = null;
+      if (workflowId) fetchRuns(workflowId);
+    }
+  });
 
   // Export workflow as JSON
   const handleExport = useCallback(() => {
@@ -181,38 +193,17 @@ export default function Toolbar() {
           throw new Error(result.error || "Execution failed");
         }
 
-        // Update nodes with their outputs
-        if (result.outputs) {
-          for (const [nodeId, output] of Object.entries(result.outputs)) {
-            updateNodeData(nodeId, {
-              output: typeof output === "string" ? output : JSON.stringify(output),
-              isRunning: false,
-              error: undefined,
-            });
-          }
-        }
-
-        // Surface per-node errors directly on the failed nodes
-        if (result.errors) {
-          for (const [nodeId, errorMsg] of Object.entries(result.errors as Record<string, string>)) {
-            updateNodeData(nodeId, { error: errorMsg, isRunning: false });
-          }
-        }
-
-        // Clear running state for nodes that didn't produce output or error
-        for (const nodeId of targetNodeIds) {
-          updateNodeData(nodeId, { isRunning: false });
-        }
-
-        // Refresh history
-        if (workflowId) {
-          fetchRuns(workflowId);
+        if (result.runId) {
+          setActiveRunId(result.runId);
+        } else {
+          setIsRunning(false);
+          abortRef.current = null;
         }
 
         showToast({
-          type: result.status === "SUCCESS" ? "success" : "warning",
-          title: result.status === "SUCCESS" ? "Workflow completed" : "Workflow completed with errors",
-          message: `Run finished in ${result.runId ? "view history for details" : "unknown time"}`,
+          type: "success",
+          title: "Execution started",
+          message: "Streaming live updates from backend...",
         });
       } catch (error: any) {
         for (const nodeId of targetNodeIds) {
@@ -224,7 +215,6 @@ export default function Toolbar() {
           console.error("Execution failed:", error);
           showToast({ type: "error", title: "Execution Failed", message: error.message });
         }
-      } finally {
         setIsRunning(false);
         abortRef.current = null;
       }
@@ -237,21 +227,21 @@ export default function Toolbar() {
   }, []);
 
   return (
-    <div className="h-12 bg-[#141416] border-b border-[#2a2a2e] flex items-center justify-between px-4 shrink-0 flex-1">
-      {/* Left: Workflow name */}
+    <div className="h-12 bg-white/90 backdrop-blur-2xl border-b border-indigo-100/50 dark:bg-[#141416]/90 dark:border-[#2a2a2e] flex flex-col justify-center px-4 shrink-0 flex-1 z-20 relative shadow-[0_4px_24px_rgba(79,70,229,0.05)] dark:shadow-none">
+      <div className="flex items-center justify-between w-full h-full">
+        {/* Left: Workflow name */}
       <div className="flex items-center gap-3">
         <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-          <span className="text-purple-400 text-xs font-bold">N</span>
+          <span className="text-purple-600 dark:text-purple-400 text-xs font-bold">N</span>
         </div>
         <input
           type="text"
           value={workflowName}
           onChange={(e) => setWorkflowName(e.target.value)}
-          className="bg-transparent text-sm font-medium text-[#e4e4e7] border-none outline-none
-            focus:bg-[#1a1a1e] focus:px-2 focus:rounded transition-all w-48"
+          className="bg-transparent text-sm font-semibold text-indigo-950 border-none outline-none focus:bg-indigo-50/50 dark:text-[#e4e4e7] dark:focus:bg-[#1a1a1e] focus:px-2 focus:rounded transition-all w-48"
         />
         {workflowId && (
-          <span className="text-[10px] text-[#52525b] bg-[#1a1a1e] px-2 py-0.5 rounded">
+          <span className="text-[10px] text-indigo-500 bg-indigo-50 border border-indigo-100/50 dark:border-none dark:text-[#52525b] dark:bg-[#1a1a1e] px-2 py-0.5 rounded font-bold uppercase tracking-wider">
             saved
           </span>
         )}
@@ -261,14 +251,14 @@ export default function Toolbar() {
       <div className="flex items-center gap-1">
         <button
           onClick={undo}
-          className="p-2 rounded-lg hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="p-2 rounded-lg text-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
           title="Undo (Ctrl+Z)"
         >
           <Undo2 size={16} />
         </button>
         <button
           onClick={redo}
-          className="p-2 rounded-lg hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="p-2 rounded-lg text-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
           title="Redo (Ctrl+Shift+Z)"
         >
           <Redo2 size={16} />
@@ -277,10 +267,12 @@ export default function Toolbar() {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-1">
+        <ThemeToggle />
+        <div className="w-px h-5 bg-indigo-100 dark:bg-[#2a2a2e] mx-1" />
+
         <button
           onClick={handleExport}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-            hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:bg-indigo-50 hover:text-indigo-800 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
           title="Export workflow"
         >
           <Download size={14} />
@@ -296,8 +288,7 @@ export default function Toolbar() {
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-            hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 hover:bg-indigo-50 hover:text-indigo-800 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
           title="Import workflow"
         >
           <Upload size={14} />
@@ -307,8 +298,8 @@ export default function Toolbar() {
         <div className="relative">
           <button
             onClick={() => setShowSampleMenu((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-              hover:bg-purple-500/10 text-purple-400/70 hover:text-purple-400 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold
+              hover:bg-purple-100 text-purple-600 dark:hover:bg-purple-900/20 dark:text-purple-400 transition-colors"
           >
             <Sparkles size={14} />
             Samples
@@ -322,7 +313,7 @@ export default function Toolbar() {
                 className="fixed inset-0 z-10"
                 onClick={() => setShowSampleMenu(false)}
               />
-              <div className="absolute right-0 top-full mt-1 z-20 w-64 bg-[#1a1a1e] border border-[#2a2a2e] rounded-xl shadow-xl overflow-hidden">
+              <div className="absolute right-0 top-full mt-1 z-20 w-64 bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgba(79,70,229,0.12)] border border-indigo-100/50 dark:bg-[#1a1a1e] dark:shadow-none dark:border-[#2a2a2e] rounded-xl overflow-hidden">
                 {SAMPLE_WORKFLOWS.map((wf) => (
                   <button
                     key={wf.name}
@@ -334,10 +325,10 @@ export default function Toolbar() {
                       }
                       setShowSampleMenu(false);
                     }}
-                    className="w-full text-left px-4 py-3 hover:bg-[#222226] transition-colors border-b border-[#2a2a2e] last:border-0"
+                    className="w-full text-left px-4 py-3 hover:bg-indigo-50/50 dark:hover:bg-[#222226] transition-colors border-b border-indigo-50 dark:border-[#2a2a2e] last:border-0"
                   >
-                    <div className="text-xs font-medium text-[#e4e4e7]">{wf.name}</div>
-                    <div className="text-[10px] text-[#52525b] mt-0.5">{wf.description}</div>
+                    <div className="text-xs font-bold text-indigo-950 dark:text-[#e4e4e7]">{wf.name}</div>
+                    <div className="text-[10px] text-indigo-500 dark:text-[#52525b] mt-0.5">{wf.description}</div>
                   </button>
                 ))}
               </div>
@@ -348,8 +339,8 @@ export default function Toolbar() {
         <button
           onClick={clearAllOutputs}
           disabled={nodes.length === 0}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-            hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold
+            text-indigo-600 hover:bg-indigo-50 hover:text-indigo-800 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors
             disabled:opacity-30 disabled:cursor-not-allowed"
           title="Clear all node outputs"
         >
@@ -364,36 +355,34 @@ export default function Toolbar() {
             }
           }}
           disabled={nodes.length === 0}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-            hover:bg-red-500/10 text-[#71717a] hover:text-red-400 transition-colors
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold
+            text-indigo-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-[#71717a] dark:hover:text-red-400 transition-colors
             disabled:opacity-30 disabled:cursor-not-allowed"
           title="Remove all nodes"
         >
           <Trash2 size={14} />
-          Clear Canvas
+          Clear
         </button>
 
-        <div className="w-px h-5 bg-[#2a2a2e] mx-1" />
+        <div className="w-px h-5 bg-indigo-100 dark:bg-[#2a2a2e] mx-1" />
 
-        {!isRunning && (
+        {selectedNodeIds.size > 0 ? (
           <button
             onClick={() => runWorkflow(true)}
             disabled={selectedNodeIds.size === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs
-              text-[#71717a] hover:text-[#e4e4e7] hover:bg-[#1a1a1e] transition-colors
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold
+              bg-white border border-indigo-200 text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 dark:text-[#71717a] dark:hover:text-[#e4e4e7] dark:hover:bg-[#1a1a1e] dark:border-none shadow-sm transition-all hover:-translate-y-0.5
               disabled:opacity-30 disabled:cursor-not-allowed"
             title="Run selected nodes"
           >
             <PlayCircle size={14} />
             Run Selected
           </button>
-        )}
-
-        {isRunning ? (
+        ) : isRunning ? (
           <button
             onClick={cancelRun}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-              bg-red-600 hover:bg-red-500 text-white transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold
+              bg-red-500 hover:bg-red-600 text-white shadow-xl shadow-red-500/20 transition-all hover:scale-105 hover:-translate-y-0.5"
             title="Cancel running workflow"
           >
             <Square size={14} />
@@ -403,15 +392,16 @@ export default function Toolbar() {
           <button
             onClick={() => runWorkflow(false)}
             disabled={nodes.length === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-              bg-purple-600 hover:bg-purple-500 text-white transition-colors
-              disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold
+              bg-indigo-600 hover:bg-indigo-500 text-white shadow-xl shadow-indigo-600/20 transition-all hover:scale-105 hover:-translate-y-0.5
+              disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0"
             title="Run full workflow"
           >
             <Play size={14} />
             Run All
           </button>
         )}
+      </div>
       </div>
     </div>
   );

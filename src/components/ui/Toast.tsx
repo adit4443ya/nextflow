@@ -68,14 +68,14 @@ export function ToastContainer() {
         >
           {ICONS[toast.type]}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-[#e4e4e7]">{toast.title}</p>
+            <p className="text-sm font-medium text-gray-900 dark:text-[#e4e4e7]">{toast.title}</p>
             {toast.message && (
-              <p className="text-xs text-[#a1a1aa] mt-0.5">{toast.message}</p>
+              <p className="text-xs text-gray-500 dark:text-[#a1a1aa] mt-0.5">{toast.message}</p>
             )}
           </div>
           <button
             onClick={() => dismiss(toast.id)}
-            className="text-[#52525b] hover:text-[#e4e4e7] transition-colors shrink-0"
+            className="text-gray-400 hover:text-gray-900 dark:text-[#52525b] dark:hover:text-[#e4e4e7] transition-colors shrink-0"
           >
             <X size={14} />
           </button>

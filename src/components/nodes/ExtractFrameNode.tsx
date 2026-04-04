@@ -36,7 +36,7 @@ export default function ExtractFrameNode({ id, data }: NodeProps) {
       error={nodeData.error}
     >
       {/* Video input indicator */}
-      <div className="text-[10px] text-[#71717a] flex items-center gap-1">
+      <div className="text-[10px] text-gray-500 dark:text-[#71717a] flex items-center gap-1">
         Video Input
         {connectedInputs.has("video_url") ? (
           <span className="text-blue-400">● connected</span>
@@ -47,7 +47,7 @@ export default function ExtractFrameNode({ id, data }: NodeProps) {
 
       {/* Timestamp */}
       <div>
-        <label className="text-[10px] text-[#71717a] uppercase tracking-wider flex items-center gap-1">
+        <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider flex items-center gap-1">
           Timestamp
           {connectedInputs.has("timestamp") && (
             <span className="text-blue-400">● connected</span>
@@ -60,8 +60,8 @@ export default function ExtractFrameNode({ id, data }: NodeProps) {
           onKeyDown={(e) => e.stopPropagation()}
           disabled={connectedInputs.has("timestamp")}
           placeholder='e.g. 5 (seconds) or "50%" '
-          className="nodrag w-full bg-[#0f0f11] border border-[#2a2a2e] rounded-lg px-3 py-1.5
-            text-sm text-[#e4e4e7] placeholder-[#52525b] focus:outline-none
+          className="nodrag w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded-lg px-3 py-1.5
+            text-sm text-gray-900 placeholder-gray-400 dark:text-[#e4e4e7] dark:placeholder-[#52525b] focus:outline-none
             focus:border-blue-500/50 transition-colors
             disabled:opacity-40 disabled:cursor-not-allowed"
         />
@@ -76,12 +76,12 @@ export default function ExtractFrameNode({ id, data }: NodeProps) {
 
       {/* Output preview */}
       {nodeData.output && !nodeData.isRunning && (
-        <div className="mt-1 border-t border-[#2a2a2e] pt-2">
+        <div className="mt-1 border-t border-gray-200 dark:border-[#2a2a2e] pt-2">
           <div className="flex items-center justify-between mb-1">
-            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Extracted Frame</label>
+            <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider">Extracted Frame</label>
             <button
               onClick={() => updateNodeData(id, { output: undefined, error: undefined })}
-              className="nodrag p-0.5 rounded hover:bg-[#2a2a2e] text-[#52525b] hover:text-[#a1a1aa] transition-colors"
+              className="nodrag p-0.5 rounded text-gray-400 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-[#2a2a2e] dark:text-[#52525b] dark:hover:text-[#a1a1aa] transition-colors"
               title="Clear output"
             >
               <X size={10} />
@@ -90,7 +90,7 @@ export default function ExtractFrameNode({ id, data }: NodeProps) {
           <img
             src={nodeData.output}
             alt="Extracted frame"
-            className="w-full h-24 object-cover rounded-lg border border-[#2a2a2e]"
+            className="w-full h-24 object-cover rounded-lg border border-gray-200 dark:border-[#2a2a2e]"
           />
         </div>
       )}

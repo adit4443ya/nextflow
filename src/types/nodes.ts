@@ -121,7 +121,7 @@ export const NODE_META: Record<NodeTypeKey, NodeMeta> = {
     label: "Upload Image",
     description: "Upload an image file",
     icon: "ImagePlus",
-    color: "#22c55e",
+    color: "#059669",
     defaultData: { label: "Upload Image" },
   },
   [NODE_TYPES.UPLOAD_VIDEO]: {
@@ -129,7 +129,7 @@ export const NODE_META: Record<NodeTypeKey, NodeMeta> = {
     label: "Upload Video",
     description: "Upload a video file",
     icon: "Film",
-    color: "#3b82f6",
+    color: "#2563eb",
     defaultData: { label: "Upload Video" },
   },
   [NODE_TYPES.LLM]: {
@@ -137,7 +137,7 @@ export const NODE_META: Record<NodeTypeKey, NodeMeta> = {
     label: "Run LLM",
     description: "Run any LLM model",
     icon: "Bot",
-    color: "#8b5cf6",
+    color: "#7c3aed",
     defaultData: { label: "Run LLM", model: "groq:meta-llama/llama-4-scout-17b-16e-instruct", temperature: 0.7, maxTokens: 1024 },
   },
   [NODE_TYPES.CROP_IMAGE]: {
@@ -145,7 +145,7 @@ export const NODE_META: Record<NodeTypeKey, NodeMeta> = {
     label: "Crop Image",
     description: "Crop an image",
     icon: "Crop",
-    color: "#22c55e",
+    color: "#059669",
     defaultData: {
       label: "Crop Image",
       xPercent: 0,
@@ -221,8 +221,8 @@ export const NODE_OUTPUTS: Record<NodeTypeKey, HandleDef[]> = {
 // Handle color map — for visual type coding
 // ============================================================
 export const HANDLE_COLORS: Record<HandleDataType, string> = {
-  [HandleDataType.TEXT]: "#8b5cf6",      // purple
-  [HandleDataType.IMAGE_URL]: "#22c55e", // green
-  [HandleDataType.VIDEO_URL]: "#3b82f6", // blue
-  [HandleDataType.NUMBER]: "#eab308",    // yellow
+  [HandleDataType.TEXT]: "#7c3aed",      // deeper purple
+  [HandleDataType.IMAGE_URL]: "#059669", // deeper green
+  [HandleDataType.VIDEO_URL]: "#2563eb", // deeper blue
+  [HandleDataType.NUMBER]: "#d97706",    // deeper yellow (amber)
 };

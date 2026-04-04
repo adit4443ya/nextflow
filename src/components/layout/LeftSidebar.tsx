@@ -52,10 +52,10 @@ export default function LeftSidebar() {
 
   if (collapsed) {
     return (
-      <div className="w-12 bg-[#141416] border-r border-[#2a2a2e] flex flex-col items-center py-3">
+      <div className="w-12 bg-white/90 border-r border-indigo-100/50 shadow-[4px_0_24px_rgba(79,70,229,0.05)] backdrop-blur-2xl dark:bg-[#141416]/90 dark:border-[#2a2a2e] dark:shadow-none flex flex-col items-center py-3 z-10 transition-all">
         <button
           onClick={() => setCollapsed(false)}
-          className="p-2 rounded-lg hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="p-2 rounded-lg text-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
         >
           <ChevronRight size={16} />
         </button>
@@ -66,7 +66,7 @@ export default function LeftSidebar() {
               <button
                 key={type}
                 onClick={() => addNode(type)}
-                className="p-2 rounded-lg hover:bg-[#1a1a1e] transition-colors"
+                className="p-2 rounded-lg hover:bg-indigo-50 hover:shadow-sm hover:scale-105 active:scale-95 dark:hover:bg-[#1a1a1e] dark:hover:shadow-none transition-all"
                 style={{ color: meta.color }}
                 title={meta.label}
               >
@@ -80,13 +80,13 @@ export default function LeftSidebar() {
   }
 
   return (
-    <div className="w-60 bg-[#141416] border-r border-[#2a2a2e] flex flex-col shrink-0">
+    <div className="w-60 bg-white/90 border-r border-indigo-100/50 shadow-[4px_0_24px_rgba(79,70,229,0.05)] backdrop-blur-2xl dark:bg-[#141416]/90 dark:border-[#2a2a2e] dark:shadow-none flex flex-col shrink-0 z-10 transition-all">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2a2e]">
-        <span className="text-sm font-semibold text-[#e4e4e7]">Nodes</span>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-indigo-50 dark:border-[#2a2a2e]">
+        <span className="text-sm font-semibold text-indigo-950 dark:text-[#e4e4e7]">Nodes</span>
         <button
           onClick={() => setCollapsed(true)}
-          className="p-1 rounded hover:bg-[#1a1a1e] text-[#71717a] hover:text-[#e4e4e7] transition-colors"
+          className="p-1 rounded text-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-[#1a1a1e] dark:text-[#71717a] dark:hover:text-[#e4e4e7] transition-colors"
         >
           <ChevronLeft size={16} />
         </button>
@@ -97,23 +97,23 @@ export default function LeftSidebar() {
         <div className="relative">
           <Search
             size={14}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#52525b]"
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-indigo-300 dark:text-[#52525b]"
           />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search nodes..."
-            className="w-full bg-[#0f0f11] border border-[#2a2a2e] rounded-lg pl-8 pr-3 py-1.5
-              text-sm text-[#e4e4e7] placeholder-[#52525b] focus:outline-none
-              focus:border-purple-500/50 transition-colors"
+            className="w-full bg-[#FAFAFA] border border-indigo-100 shadow-inner dark:bg-[#0f0f11] dark:border-[#2a2a2e] dark:shadow-none rounded-lg pl-8 pr-3 py-1.5
+              text-sm text-indigo-950 placeholder-indigo-300 dark:text-[#e4e4e7] dark:placeholder-[#52525b] focus:outline-none
+              focus:bg-white focus:border-indigo-300 focus:ring-1 focus:ring-indigo-100 transition-all"
           />
         </div>
       </div>
 
       {/* Quick Access */}
-      <div className="px-3 py-1">
-        <span className="text-[10px] uppercase tracking-widest text-[#52525b] font-semibold">
+      <div className="px-3 py-1 mt-2">
+        <span className="text-[10px] uppercase tracking-widest text-indigo-400/80 dark:text-[#52525b] font-bold">
           Quick Access
         </span>
       </div>
@@ -127,8 +127,8 @@ export default function LeftSidebar() {
               key={type}
               onClick={() => addNode(type)}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg
-                hover:bg-[#1a1a1e] transition-all group cursor-grab active:cursor-grabbing
-                border border-transparent hover:border-[#2a2a2e]"
+                hover:bg-white hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 hover:border-indigo-100/50 dark:hover:bg-[#1a1a1e] dark:hover:shadow-none transition-all group cursor-grab active:cursor-grabbing
+                border border-transparent dark:hover:border-[#2a2a2e]"
             >
               <div
                 className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
@@ -140,10 +140,10 @@ export default function LeftSidebar() {
                 {ICON_MAP[meta.icon]}
               </div>
               <div className="text-left">
-                <div className="text-sm text-[#e4e4e7] font-medium">
+                <div className="text-sm text-indigo-950 dark:text-[#e4e4e7] font-semibold">
                   {meta.label}
                 </div>
-                <div className="text-[10px] text-[#52525b]">
+                <div className="text-[10px] text-indigo-500 dark:text-[#52525b]">
                   {meta.description}
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function LeftSidebar() {
           );
         })}
         {filteredNodes.length === 0 && (
-          <p className="text-xs text-[#52525b] text-center py-4">
+          <p className="text-xs text-indigo-400 dark:text-[#52525b] text-center py-4 font-medium">
             No nodes found
           </p>
         )}

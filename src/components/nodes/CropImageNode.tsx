@@ -22,7 +22,7 @@ function ParamInput({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <label className="text-[10px] text-[#71717a] w-16 shrink-0 flex items-center gap-1">
+      <label className="text-[10px] text-gray-500 dark:text-[#71717a] w-16 shrink-0 flex items-center gap-1">
         {label}
         {connected && <span className="text-green-400">●</span>}
       </label>
@@ -34,8 +34,8 @@ function ParamInput({
         onChange={(e) => onChange(Number(e.target.value))}
         onKeyDown={(e) => e.stopPropagation()}
         disabled={disabled}
-        className="nodrag w-full bg-[#0f0f11] border border-[#2a2a2e] rounded px-2 py-1
-          text-xs text-[#e4e4e7] focus:outline-none focus:border-green-500/50
+        className="nodrag w-full bg-gray-50 border border-gray-200 dark:bg-[#0f0f11] dark:border-[#2a2a2e] rounded px-2 py-1
+          text-xs text-gray-900 dark:text-[#e4e4e7] focus:outline-none focus:border-green-500/50
           transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
       />
     </div>
@@ -71,7 +71,7 @@ export default function CropImageNode({ id, data }: NodeProps) {
       error={nodeData.error}
     >
       {/* Image input indicator */}
-      <div className="text-[10px] text-[#71717a] flex items-center gap-1">
+      <div className="text-[10px] text-gray-500 dark:text-[#71717a] flex items-center gap-1">
         Image Input
         {connectedInputs.has("image_url") ? (
           <span className="text-green-400">● connected</span>
@@ -121,12 +121,12 @@ export default function CropImageNode({ id, data }: NodeProps) {
 
       {/* Output preview */}
       {nodeData.output && !nodeData.isRunning && (
-        <div className="mt-1 border-t border-[#2a2a2e] pt-2">
+        <div className="mt-1 border-t border-gray-200 dark:border-[#2a2a2e] pt-2">
           <div className="flex items-center justify-between mb-1">
-            <label className="text-[10px] text-[#71717a] uppercase tracking-wider">Cropped</label>
+            <label className="text-[10px] text-gray-500 dark:text-[#71717a] uppercase tracking-wider">Cropped</label>
             <button
               onClick={() => updateNodeData(id, { output: undefined, error: undefined })}
-              className="nodrag p-0.5 rounded hover:bg-[#2a2a2e] text-[#52525b] hover:text-[#a1a1aa] transition-colors"
+              className="nodrag p-0.5 rounded text-gray-400 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-[#2a2a2e] dark:text-[#52525b] dark:hover:text-[#a1a1aa] transition-colors"
               title="Clear output"
             >
               <X size={10} />
@@ -135,7 +135,7 @@ export default function CropImageNode({ id, data }: NodeProps) {
           <img
             src={nodeData.output}
             alt="Cropped"
-            className="w-full h-24 object-cover rounded-lg border border-[#2a2a2e]"
+            className="w-full h-24 object-cover rounded-lg border border-gray-200 dark:border-[#2a2a2e]"
           />
         </div>
       )}

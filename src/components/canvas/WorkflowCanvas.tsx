@@ -11,6 +11,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
+import { useTheme } from "next-themes";
 import { useWorkflowStore } from "@/store/workflow-store";
 import { isValidConnection } from "@/lib/type-validation";
 
@@ -45,6 +46,7 @@ const defaultEdgeOptions = {
 };
 
 export default function WorkflowCanvas() {
+  const { theme } = useTheme();
   const {
     nodes,
     edges,
@@ -109,24 +111,24 @@ export default function WorkflowCanvas() {
         snapToGrid
         snapGrid={[16, 16]}
         deleteKeyCode={null}
-        className="bg-[#0a0a0b]"
+        className="bg-gradient-to-br from-[#F5F3FF] via-[#EEF2FF] to-white dark:bg-none dark:bg-[#0a0a0b]"
         proOptions={{ hideAttribution: true }}
       >
         <Background
           variant={BackgroundVariant.Dots}
           gap={20}
           size={1}
-          color="#1a1a1e"
+          color={theme === "dark" ? "#1a1a1e" : "#c7d2fe"}
         />
         <Controls
-          className="!bg-[#141416] !border-[#2a2a2e] !rounded-lg !shadow-lg
-            [&>button]:!bg-[#141416] [&>button]:!border-[#2a2a2e] [&>button]:!text-[#71717a]
-            [&>button:hover]:!bg-[#1a1a1e] [&>button:hover]:!text-[#e4e4e7]"
+          className="!bg-white/90 !backdrop-blur-2xl !border-indigo-100/50 dark:!bg-[#141416]/90 dark:!border-[#2a2a2e] !rounded-lg !shadow-[0_4px_24px_rgba(79,70,229,0.1)] dark:!shadow-none
+            [&>button]:!bg-transparent [&>button]:!border-indigo-50 [&>button]:!text-indigo-600 dark:[&>button]:!border-[#2a2a2e] dark:[&>button]:!text-[#71717a]
+            [&>button:hover]:!bg-indigo-50 [&>button:hover]:!text-indigo-900 dark:[&>button:hover]:!bg-[#1a1a1e] dark:[&>button:hover]:!text-[#e4e4e7]"
         />
         <MiniMap
-          className="!bg-[#141416] !border-[#2a2a2e] !rounded-lg"
-          nodeColor="#2a2a2e"
-          maskColor="rgba(0, 0, 0, 0.7)"
+          className="!bg-white/90 !backdrop-blur-2xl !border-indigo-100/50 dark:!bg-[#141416]/90 dark:!border-[#2a2a2e] !rounded-lg !shadow-[0_4px_24px_rgba(79,70,229,0.1)] dark:!shadow-none"
+          nodeColor={theme === "dark" ? "#2a2a2e" : "#e0e7ff"}
+          maskColor={theme === "dark" ? "rgba(0, 0, 0, 0.7)" : "rgba(255, 255, 255, 0.6)"}
         />
       </ReactFlow>
     </div>
